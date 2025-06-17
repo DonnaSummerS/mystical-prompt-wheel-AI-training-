@@ -1,0 +1,301 @@
+diff --git a//dev/null b/src/index.html
+index 0000000000000000000000000000000000000000..e14870c1c082103353413e680e8efdf4bfa2788e 100644
+--- a//dev/null
++++ b/src/index.html
+@@ -0,0 +1,48 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++    <meta charset="UTF-8">
++    <meta name="viewport" content="width=device-width, initial-scale=1.0">
++    <title>Daily AI Prompt Wheel</title>
++    <link rel="stylesheet" href="styles.css">
++    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Spectral:wght@400;700&family=Crimson+Text:wght@400;700&display=swap" rel="stylesheet">
++</head>
++<body>
++    <div id="app">
++        <div id="wheel-container">
++            <div id="wheel"></div>
++            <div id="runes"></div>
++        </div>
++        <button id="spinButton">LET'S GO!!!</button>
++        <div id="countdown"></div>
++        <div id="tipModal" class="modal hidden">
++            <div class="modal-content">
++                <p id="tipText"></p>
++                <button id="closeTip">Close</button>
++            </div>
++        </div>
++        <div id="adminIcon">⚙</div>
++    </div>
++
++    <div id="adminModal" class="modal hidden">
++        <div class="modal-content">
++            <h2>Admin Access</h2>
++            <label>Passcode:<input type="password" id="adminPass"></label>
++            <label><input type="checkbox" id="showAdminPass"> Show</label>
++            <button id="adminLogin">Enter</button>
++            <button id="closeAdmin">Close</button>
++        </div>
++    </div>
++
++    <div id="settingsModal" class="modal hidden">
++        <div class="modal-content">
++            <h2>Manage Tips</h2>
++            <div id="tipsContainer"></div>
++            <button id="saveTips">Save</button>
++            <button id="closeSettings">Close</button>
++        </div>
++    </div>
++
++    <script src="script.js"></script>
++</body>
++</html>
+
+diff --git a//dev/null b/src/script.js
+index 0000000000000000000000000000000000000000..029a7898f4eb964e4baa05cfe1ba91f4abd569a8 100644
+--- a//dev/null
++++ b/src/script.js
+@@ -0,0 +1,142 @@
++const wheel = document.getElementById('wheel');
++const spinButton = document.getElementById('spinButton');
++const tipModal = document.getElementById('tipModal');
++const tipText = document.getElementById('tipText');
++const closeTip = document.getElementById('closeTip');
++const countdown = document.getElementById('countdown');
++const adminIcon = document.getElementById('adminIcon');
++const adminModal = document.getElementById('adminModal');
++const adminPass = document.getElementById('adminPass');
++const showAdminPass = document.getElementById('showAdminPass');
++const adminLogin = document.getElementById('adminLogin');
++const closeAdmin = document.getElementById('closeAdmin');
++const settingsModal = document.getElementById('settingsModal');
++const tipsContainer = document.getElementById('tipsContainer');
++const saveTips = document.getElementById('saveTips');
++const closeSettings = document.getElementById('closeSettings');
++
++const defaultTips = [
++    ['Tip A1', 'Tip A2'],
++    ['Tip B1', 'Tip B2'],
++    ['Tip C1', 'Tip C2'],
++    ['Tip D1', 'Tip D2'],
++    ['Tip E1', 'Tip E2']
++];
++
++function loadTips() {
++    const saved = JSON.parse(localStorage.getItem('tips'));
++    return saved || defaultTips;
++}
++
++let tips = loadTips();
++
++function saveTipsToStorage() {
++    localStorage.setItem('tips', JSON.stringify(tips));
++}
++
++function spinWheel() {
++    if (!canSpin()) return;
++    const rand = Math.floor(Math.random() * 5);
++    const rotation = 360 * 5 + rand * 72 + 36; // center
++    wheel.style.transform = `rotate(${rotation}deg)`;
++    setTimeout(() => {
++        const segmentTips = tips[rand];
++        const tip = segmentTips[Math.floor(Math.random() * segmentTips.length)];
++        tipText.textContent = tip;
++        tipModal.classList.remove('hidden');
++        localStorage.setItem('lastSpin', Date.now());
++        updateCountdown();
++    }, 3500);
++}
++
++function canSpin() {
++    const last = parseInt(localStorage.getItem('lastSpin')) || 0;
++    const diff = Date.now() - last;
++    return diff >= 24 * 60 * 60 * 1000;
++}
++
++function updateCountdown() {
++    const last = parseInt(localStorage.getItem('lastSpin')) || 0;
++    const diff = Date.now() - last;
++    if (diff >= 24 * 60 * 60 * 1000) {
++        countdown.textContent = 'Ready to spin!';
++        spinButton.disabled = false;
++    } else {
++        const remain = 24 * 60 * 60 * 1000 - diff;
++        const hours = Math.floor(remain / 3600000);
++        const minutes = Math.floor((remain % 3600000) / 60000);
++        const seconds = Math.floor((remain % 60000) / 1000);
++        countdown.textContent = `Next spin in ${hours}h ${minutes}m ${seconds}s`;
++        spinButton.disabled = true;
++    }
++}
++
++function showAdmin() {
++    adminModal.classList.remove('hidden');
++}
++
++function hideAdmin() {
++    adminModal.classList.add('hidden');
++    adminPass.value = '';
++}
++
++function openSettings() {
++    tipsContainer.innerHTML = '';
++    tips.forEach((arr, i) => {
++        const textarea = document.createElement('textarea');
++        textarea.value = arr.join('\n');
++        textarea.dataset.index = i;
++        tipsContainer.appendChild(document.createElement('hr'));
++        tipsContainer.appendChild(textarea);
++    });
++    settingsModal.classList.remove('hidden');
++}
++
++function closeSettingsModal() {
++    settingsModal.classList.add('hidden');
++}
++
++spinButton.addEventListener('click', spinWheel);
++closeTip.addEventListener('click', () => tipModal.classList.add('hidden'));
++adminIcon.addEventListener('click', showAdmin);
++closeAdmin.addEventListener('click', hideAdmin);
++showAdminPass.addEventListener('change', () => {
++    adminPass.type = showAdminPass.checked ? 'text' : 'password';
++});
++adminLogin.addEventListener('click', () => {
++    if (adminPass.value === 'BerniBOT') {
++        hideAdmin();
++        openSettings();
++    } else {
++        alert('Wrong passcode');
++    }
++});
++
++saveTips.addEventListener('click', () => {
++    const areas = tipsContainer.querySelectorAll('textarea');
++    areas.forEach(a => {
++        const idx = parseInt(a.dataset.index);
++        tips[idx] = a.value.split(/\n+/).filter(t => t.trim());
++    });
++    saveTipsToStorage();
++    closeSettingsModal();
++});
++
++closeSettings.addEventListener('click', closeSettingsModal);
++
++setInterval(updateCountdown, 1000);
++updateCountdown();
++
++// Create runes
++const runeSymbols = ['ᚠ','ᚢ','ᚦ','ᚨ','ᚱ','ᚲ','ᚷ','ᚹ'];
++const runeContainer = document.getElementById('runes');
++for (let i=0;i<6;i++) {
++    const r = document.createElement('div');
++    r.className = 'rune';
++    r.textContent = runeSymbols[i];
++    const angle = (i / 6) * 2 * Math.PI;
++    const radius = 250; // around wheel outer ring
++    r.style.left = 250 + radius*Math.cos(angle) + 'px';
++    r.style.top = 250 + radius*Math.sin(angle) + 'px';
++    runeContainer.appendChild(r);
++}
+
+diff --git a//dev/null b/src/styles.css
+index 0000000000000000000000000000000000000000..d27e7e7c9dd873f4a9d2ab2d9cb93803f6ca5eb5 100644
+--- a//dev/null
++++ b/src/styles.css
+@@ -0,0 +1,94 @@
++body {
++    margin: 0;
++    font-family: 'Crimson Text', serif;
++    background: linear-gradient(180deg, #0F1B3C, #2D1B69);
++    color: #FFF;
++    text-align: center;
++}
++
++#app {
++    padding-top: 50px;
++}
++
++#wheel-container {
++    position: relative;
++    width: 500px;
++    height: 500px;
++    margin: 0 auto;
++}
++
++#wheel {
++    width: 400px;
++    height: 400px;
++    border-radius: 50%;
++    border: 50px solid rgba(255,255,255,0.3);
++    margin: 0 auto;
++    position: relative;
++    background: conic-gradient(#88CCFF 0 72deg, #AADD99 72deg 144deg,
++        #FFB6C1 144deg 216deg, #FFEEC1 216deg 288deg, #CCCCFF 288deg 360deg);
++    transition: transform 3.5s ease-out;
++}
++
++.rune {
++    position: absolute;
++    width: 70px;
++    height: 45px;
++    background: rgba(255,255,255,0.3);
++    border-radius: 5px;
++    line-height: 45px;
++    font-size: 24px;
++    transform: translate(-50%, -50%);
++    pointer-events: none;
++}
++
++#spinButton {
++    margin-top: 20px;
++    padding: 20px 40px;
++    font-family: 'Cinzel Decorative', serif;
++    font-size: 24px;
++}
++
++.modal {
++    position: fixed;
++    top: 0;
++    left: 0;
++    width: 100%;
++    height: 100%;
++    background: rgba(0,0,0,0.6);
++    display: flex;
++    justify-content: center;
++    align-items: center;
++}
++
++.modal.hidden {
++    display: none;
++}
++
++.modal-content {
++    background: #2D1B69;
++    padding: 20px;
++    border: 2px solid #88CCFF;
++    border-radius: 10px;
++}
++
++#adminIcon {
++    position: fixed;
++    top: 20px;
++    right: 20px;
++    font-size: 32px;
++    cursor: pointer;
++}
++
++#countdown {
++    margin-top: 10px;
++    font-family: 'Spectral', serif;
++}
++@keyframes float {
++    0% { transform: translate(-50%, -50%) translateY(0); }
++    50% { transform: translate(-50%, -50%) translateY(-15px); }
++    100% { transform: translate(-50%, -50%) translateY(0); }
++}
++
++.rune {
++    animation: float 6s ease-in-out infinite;
++}
