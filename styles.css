@@ -1,0 +1,911 @@
+/* ===== MYSTICAL FANTASY THEME - DAILY AI PROMPT WHEEL ===== */
+/* Base Variables */
+:root {
+    /* Color System */
+    --deep-blue: #0F1B3C;
+    --purple-twilight: #2D1B69;
+    --cool-cyan: #88CCFF;
+    --ethereal-purple: #CCCCFF;
+    --soft-white-blue: #E0F8FF;
+    --gentle-pink: #FFB6C1;
+    --warm-lavender: #DDA0DD;
+    --pearl-white: #FFF0F5;
+    --pure-white: #FFFFFF;
+    --warm-aqua-pink: #B8E6FF;
+    --ethereal-green: #AADD99;
+    --warm-mint: #C8FFCC;
+    --warm-rose: #FFCCDD;
+    --pale-gold: #FFEEC1;
+    --warm-cream: #FFF8DC;
+    
+    /* Fonts */
+    --font-primary: 'Cinzel Decorative', 'Times New Roman', serif;
+    --font-secondary: 'Spectral', 'Times New Roman', serif;
+    --font-body: 'Crimson Text', 'Times New Roman', serif;
+    
+    /* Dimensions */
+    --wheel-diameter: 400px;
+    --wheel-outer-ring: 50px;
+    --wheel-total-diameter: 500px;
+    --hub-diameter: 120px;
+    --tablet-width: 70px;
+    --tablet-height: 45px;
+    --tablet-orbit-radius: 550px;
+    
+    /* Animation Timings */
+    --phase-transition: 60s;
+    --wheel-spin: 3.5s;
+    --tablet-rotation: 75s;
+    --breathing-cycle: 4s;
+    --hover-response: 0.3s;
+}
+
+/* ===== GLOBAL STYLES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--pure-white);
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    background-color: var(--deep-blue);
+}
+
+/* ===== MYSTICAL BACKGROUND ===== */
+.mystical-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--deep-blue) 0%, var(--purple-twilight) 100%);
+    z-index: -10;
+    overflow: hidden;
+}
+
+/* Ambient Particles */
+.ambient-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -9;
+}
+
+.ambient-particles::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(var(--cool-cyan) 1px, transparent 1px),
+                      radial-gradient(var(--ethereal-purple) 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: 0 0, 25px 25px;
+    opacity: 0.2;
+    animation: particleDrift 120s linear infinite;
+}
+
+/* Energy Wisps */
+.energy-wisps {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -8;
+    overflow: hidden;
+}
+
+.energy-wisps::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background-image: 
+        radial-gradient(circle at 30% 40%, var(--cool-cyan) 0%, transparent 40%),
+        radial-gradient(circle at 70% 60%, var(--warm-lavender) 0%, transparent 40%);
+    opacity: 0.1;
+    animation: wispFlow 60s ease-in-out infinite alternate;
+}
+
+/* ===== CONTAINER LAYOUT ===== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3 {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    text-align: center;
+    color: var(--pure-white);
+    text-shadow: 0 0 8px var(--cool-cyan);
+    letter-spacing: 1px;
+    animation: textShimmer 15s infinite alternate;
+}
+
+h1.main-title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-secondary);
+}
+
+p {
+    font-family: var(--font-body);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+/* ===== HEADER SECTION ===== */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 1rem 0;
+}
+
+.admin-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: radial-gradient(circle, rgba(136, 204, 255, 0.2) 0%, rgba(45, 27, 105, 0.4) 100%);
+    border: 2px solid var(--cool-cyan);
+    box-shadow: 0 0 15px var(--cool-cyan);
+    transition: all var(--hover-response) ease;
+}
+
+.admin-icon:hover {
+    transform: rotate(30deg);
+    box-shadow: 0 0 25px var(--cool-cyan);
+}
+
+.admin-icon .runic-symbol {
+    font-size: 1.8rem;
+    transform: rotate(0deg);
+    animation: runicRotate 10s linear infinite;
+}
+
+/* ===== WHEEL CONTAINER ===== */
+.wheel-container {
+    position: relative;
+    width: var(--wheel-total-diameter);
+    height: var(--wheel-total-diameter);
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ===== WHEEL DESIGN ===== */
+.wheel {
+    position: relative;
+    width: var(--wheel-diameter);
+    height: var(--wheel-diameter);
+    border-radius: 50%;
+    overflow: visible;
+    transition: transform var(--wheel-spin) cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.wheel-outer-ring {
+    position: absolute;
+    top: -25px;
+    left: -25px;
+    width: calc(var(--wheel-diameter) + 50px);
+    height: calc(var(--wheel-diameter) + 50px);
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(136, 204, 255, 0.4) 0%, rgba(221, 160, 221, 0.4) 100%);
+    border: 2px solid var(--pure-white);
+    box-shadow: 
+        0 0 15px var(--cool-cyan),
+        inset 0 0 20px var(--ethereal-purple);
+    z-index: 1;
+    animation: ringPulse var(--breathing-cycle) infinite alternate;
+}
+
+.wheel-outer-ring::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0 L52 48 L100 50 L52 52 L50 100 L48 52 L0 50 L48 48 Z' fill='none' stroke='white' stroke-width='0.5'/%3E%3C/svg%3E");
+    background-size: 50px 50px;
+    background-repeat: repeat;
+    opacity: 0.3;
+    animation: runicRotate 120s linear infinite reverse;
+}
+
+.wheel-segments {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.wheel-segment {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 50% 100%);
+    transform-origin: center;
+}
+
+.wheel-segment[data-segment="1"] {
+    transform: rotate(0deg);
+    background: linear-gradient(135deg, var(--cool-cyan) 0%, var(--warm-aqua-pink) 100%);
+}
+
+.wheel-segment[data-segment="2"] {
+    transform: rotate(72deg);
+    background: linear-gradient(135deg, var(--ethereal-green) 0%, var(--warm-mint) 100%);
+}
+
+.wheel-segment[data-segment="3"] {
+    transform: rotate(144deg);
+    background: linear-gradient(135deg, var(--gentle-pink) 0%, var(--warm-rose) 100%);
+}
+
+.wheel-segment[data-segment="4"] {
+    transform: rotate(216deg);
+    background: linear-gradient(135deg, var(--pale-gold) 0%, var(--warm-cream) 100%);
+}
+
+.wheel-segment[data-segment="5"] {
+    transform: rotate(288deg);
+    background: linear-gradient(135deg, var(--ethereal-purple) 0%, var(--warm-lavender) 100%);
+}
+
+/* Wheel Hub */
+.wheel-hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--hub-diameter);
+    height: var(--hub-diameter);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, var(--pure-white) 0%, var(--cool-cyan) 40%, var(--ethereal-purple) 100%);
+    box-shadow: 0 0 20px var(--cool-cyan);
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: hubPulse var(--breathing-cycle) infinite alternate;
+}
+
+.central-symbol {
+    width: 60px;
+    height: 60px;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 10 L50 30 L30 50 L10 30 Z' fill='white' stroke='white' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: symbolRotate 20s linear infinite;
+}
+
+/* ===== FLOATING RUNIC TABLETS ===== */
+.floating-tablets {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.runic-tablet {
+    position: absolute;
+    width: var(--tablet-width);
+    height: var(--tablet-height);
+    background: linear-gradient(135deg, rgba(136, 204, 255, 0.3) 0%, rgba(221, 160, 221, 0.3) 100%);
+    border: 1px solid var(--pure-white);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: var(--font-primary);
+    font-size: 1.8rem;
+    color: var(--pure-white);
+    text-shadow: 0 0 5px var(--cool-cyan);
+    box-shadow: 0 0 10px var(--cool-cyan);
+    opacity: 0.7;
+    transform-origin: center;
+}
+
+.runic-tablet::before {
+    content: attr(data-symbol);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+}
+
+.runic-tablet:nth-child(1) {
+    top: 10%;
+    left: 20%;
+    animation: 
+        tabletFloat 8s ease-in-out infinite alternate,
+        tabletRotate 90s linear infinite;
+}
+
+.runic-tablet:nth-child(2) {
+    top: 15%;
+    right: 15%;
+    animation: 
+        tabletFloat 7s ease-in-out infinite alternate-reverse,
+        tabletRotate 80s linear infinite reverse;
+}
+
+.runic-tablet:nth-child(3) {
+    bottom: 20%;
+    left: 10%;
+    animation: 
+        tabletFloat 9s ease-in-out infinite alternate,
+        tabletRotate 85s linear infinite;
+}
+
+.runic-tablet:nth-child(4) {
+    bottom: 15%;
+    right: 10%;
+    animation: 
+        tabletFloat 6s ease-in-out infinite alternate-reverse,
+        tabletRotate 75s linear infinite reverse;
+}
+
+.runic-tablet:nth-child(5) {
+    top: 50%;
+    left: 5%;
+    animation: 
+        tabletFloat 10s ease-in-out infinite alternate,
+        tabletRotate 95s linear infinite;
+}
+
+.runic-tablet:nth-child(6) {
+    top: 50%;
+    right: 5%;
+    animation: 
+        tabletFloat 11s ease-in-out infinite alternate-reverse,
+        tabletRotate 100s linear infinite reverse;
+}
+
+.runic-tablet:nth-child(7) {
+    top: 30%;
+    left: 50%;
+    animation: 
+        tabletFloat 7.5s ease-in-out infinite alternate,
+        tabletRotate 85s linear infinite;
+}
+
+.runic-tablet:nth-child(8) {
+    bottom: 30%;
+    left: 50%;
+    animation: 
+        tabletFloat 8.5s ease-in-out infinite alternate-reverse,
+        tabletRotate 90s linear infinite reverse;
+}
+
+/* ===== BUTTONS ===== */
+.spin-button-container {
+    position: relative;
+    margin-top: 2rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.mystical-button {
+    min-width: 280px;
+    height: 80px;
+    padding: 0 2rem;
+    background: linear-gradient(135deg, rgba(136, 204, 255, 0.3) 0%, rgba(221, 160, 221, 0.3) 100%);
+    border: 2px solid var(--pure-white);
+    border-radius: 8px;
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    color: var(--pure-white);
+    text-shadow: 0 0 5px var(--cool-cyan);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--hover-response) ease;
+    box-shadow: 0 0 15px var(--cool-cyan);
+}
+
+.mystical-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.5s;
+}
+
+.mystical-button:hover {
+    box-shadow: 0 0 25px var(--cool-cyan);
+    transform: translateY(-3px);
+}
+
+.mystical-button:hover::before {
+    left: 100%;
+}
+
+.mystical-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.mystical-button:disabled::before {
+    display: none;
+}
+
+/* ===== COUNTDOWN TIMER ===== */
+.countdown-timer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-family: var(--font-secondary);
+}
+
+.timer-label {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--pure-white);
+}
+
+.timer-value {
+    font-size: 1.8rem;
+    font-family: var(--font-primary);
+    color: var(--pure-white);
+    text-shadow: 0 0 8px var(--cool-cyan);
+}
+
+/* ===== MODALS ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 27, 60, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.mystical-modal {
+    width: 90%;
+    max-width: 600px;
+    background: linear-gradient(135deg, rgba(15, 27, 60, 0.9) 0%, rgba(45, 27, 105, 0.9) 100%);
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    animation: modalAppear 0.5s ease-out forwards;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: all var(--hover-response) ease;
+}
+
+.close-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+.modal-content {
+    padding: 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Admin Access Modal */
+.admin-access-modal {
+    max-width: 500px;
+    position: relative;
+}
+
+.admin-access-modal::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M25,2 L75,2 L98,25 L98,75 L75,98 L25,98 L2,75 L2,25 Z' fill='none' stroke='white' stroke-width='0.5'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+    opacity: 0.1;
+    z-index: -1;
+    animation: runicRotate 120s linear infinite;
+}
+
+.runic-border {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.mystical-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--cool-cyan);
+    border-radius: 8px;
+    color: var(--pure-white);
+    font-family: var(--font-secondary);
+    font-size: 1.1rem;
+    box-shadow: 0 0 10px var(--cool-cyan);
+}
+
+.mystical-input:focus {
+    outline: none;
+    box-shadow: 0 0 15px var(--cool-cyan);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.mystical-eye {
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cellipse cx='15' cy='15' rx='12' ry='7' fill='none' stroke='white' stroke-width='1.5'/%3E%3Ccircle cx='15' cy='15' r='4' fill='white'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
+    transition: all var(--hover-response) ease;
+}
+
+.mystical-eye:hover {
+    opacity: 1;
+}
+
+.submit-button {
+    margin: 0 auto;
+    display: block;
+}
+
+/* Admin Panel Modal */
+.admin-panel-modal {
+    max-width: 800px;
+}
+
+.admin-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tip-inputs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tip-input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.tip-input-group .runic-symbol {
+    font-size: 2rem;
+    min-width: 40px;
+    text-align: center;
+    color: var(--pure-white);
+    text-shadow: 0 0 5px var(--cool-cyan);
+}
+
+.mystical-textarea {
+    width: 100%;
+    height: 100px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--cool-cyan);
+    border-radius: 8px;
+    color: var(--pure-white);
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    resize: vertical;
+    box-shadow: 0 0 10px var(--cool-cyan);
+}
+
+.mystical-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 15px var(--cool-cyan);
+}
+
+.file-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.file-controls .mystical-button {
+    min-width: 0;
+    height: auto;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+}
+
+/* Music Control Section */
+.locked-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.mystical-lock {
+    width: 80px;
+    height: 80px;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='20' y='35' width='40' height='35' rx='5' fill='none' stroke='white' stroke-width='3'/%3E%3Cpath d='M25 35 L25 25 Q25 15 40 15 Q55 15 55 25 L55 35' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='40' cy='50' r='5' fill='white'/%3E%3Cpath d='M40 55 L40 60' stroke='white' stroke-width='3'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.8;
+}
+
+.music-player {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+/* Tip Modal */
+.tip-modal {
+    max-width: 600px;
+}
+
+.tip-content {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--pure-white);
+    text-align: center;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.hidden {
+    display: none !important;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes particleDrift {
+    0% {
+        background-position: 0 0, 25px 25px;
+    }
+    100% {
+        background-position: 1000px 500px, 1025px 525px;
+    }
+}
+
+@keyframes wispFlow {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(5deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+@keyframes textShimmer {
+    0% {
+        text-shadow: 0 0 8px var(--cool-cyan);
+    }
+    50% {
+        text-shadow: 0 0 15px var(--warm-lavender);
+    }
+    100% {
+        text-shadow: 0 0 8px var(--cool-cyan);
+    }
+}
+
+@keyframes runicRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes ringPulse {
+    0% {
+        box-shadow: 
+            0 0 15px var(--cool-cyan),
+            inset 0 0 20px var(--ethereal-purple);
+    }
+    100% {
+        box-shadow: 
+            0 0 25px var(--warm-lavender),
+            inset 0 0 30px var(--gentle-pink);
+    }
+}
+
+@keyframes hubPulse {
+    0% {
+        box-shadow: 0 0 20px var(--cool-cyan);
+        background: radial-gradient(circle, var(--pure-white) 0%, var(--cool-cyan) 40%, var(--ethereal-purple) 100%);
+    }
+    100% {
+        box-shadow: 0 0 30px var(--warm-lavender);
+        background: radial-gradient(circle, var(--pure-white) 0%, var(--gentle-pink) 40%, var(--warm-lavender) 100%);
+    }
+}
+
+@keyframes symbolRotate {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(1.1);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes tabletFloat {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-15px) rotate(4deg);
+    }
+}
+
+@keyframes tabletRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes modalAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+    :root {
+        --wheel-diameter: 300px;
+        --wheel-outer-ring: 40px;
+        --wheel-total-diameter: 380px;
+        --hub-diameter: 90px;
+        --tablet-width: 50px;
+        --tablet-height: 35px;
+    }
+    
+    h1.main-title {
+        font-size: 2.2rem;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    .mystical-button {
+        min-width: 220px;
+        height: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .tip-inputs {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --wheel-diameter: 250px;
+        --wheel-outer-ring: 30px;
+        --wheel-total-diameter: 310px;
+        --hub-diameter: 70px;
+        --tablet-width: 40px;
+        --tablet-height: 25px;
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+    
+    h1.main-title {
+        font-size: 1.8rem;
+    }
+    
+    .mystical-button {
+        min-width: 180px;
+        height: 50px;
+        font-size: 1rem;
+    }
+    
+    .modal-content {
+        padding: 1rem;
+    }
+    
+    .file-controls {
+        flex-direction: column;
+    }
+}
