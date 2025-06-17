@@ -1,0 +1,1184 @@
+Of course. Here is the complete, single-file web application for the "Daily AI Prompt Wheel - Mystical Fantasy Edition," built to your exact specifications.
+
+To use this, simply copy the code below into a new file, name it index.html, and open it with a modern web browser like Chrome, Firefox, or Safari.
+
+Generated html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily AI Prompt Wheel - Mystical Fantasy Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Crimson+Text:wght@400;600&family=Spectral:wght@300;400&display=swap" rel="stylesheet">
+
+    <style>
+        /* === MYSTICAL DESIGN SYSTEM === */
+        :root {
+            /* Core Environment */
+            --bg-deep-blue: #0F1B3C;
+            --bg-soft-purple: #2D1B69;
+
+            /* Color Phase Variables (Will be animated) */
+            --phase-primary: #88CCFF;
+            --phase-secondary: #CCCCFF;
+            --phase-tertiary: #E0F8FF;
+            --phase-particle-1: #88CCFF;
+            --phase-particle-2: #CCCCFF;
+
+            /* Fixed Accent */
+            --accent-white: #FFFFFF;
+            --text-glow-blur: 8px;
+            --interactive-glow-blur: 12px;
+            --interactive-hover-glow-blur: 25px;
+
+            /* Segment Colors (Static for gradients) */
+            --seg1-cool: #88CCFF; --seg1-warm: #B8E6FF;
+            --seg2-cool: #AADD99; --seg2-warm: #C8FFCC;
+            --seg3-cool: #FFB6C1; --seg3-warm: #FFCCDD;
+            --seg4-cool: #FFEEC1; --seg4-warm: #FFF8DC;
+            --seg5-cool: #CCCCFF; --seg5-warm: #E6E6FA;
+
+            /* Fonts */
+            --font-header-primary: 'Cinzel Decorative', 'Times New Roman', serif;
+            --font-header-secondary: 'Spectral', 'Times New Roman', serif;
+            --font-body: 'Crimson Text', 'Times New Roman', serif;
+        }
+
+        @keyframes phase-cycle {
+            0%, 100% { /* Cool Phase */
+                --phase-primary: #88CCFF;
+                --phase-secondary: #CCCCFF;
+                --phase-tertiary: #E0F8FF;
+                --phase-particle-1: #88CCFF;
+                --phase-particle-2: #CCCCFF;
+            }
+            50% { /* Warm Phase */
+                --phase-primary: #FFB6C1;
+                --phase-secondary: #DDA0DD;
+                --phase-tertiary: #FFF0F5;
+                --phase-particle-1: #FFB6C1;
+                --phase-particle-2: #DDA0DD;
+            }
+        }
+
+        /* === BASE & ATMOSPHERE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-body);
+        }
+
+        body {
+            background-color: var(--bg-deep-blue);
+            background-image: linear-gradient(160deg, var(--bg-soft-purple), var(--bg-deep-blue));
+            color: var(--phase-tertiary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+            animation: phase-cycle 60s infinite linear;
+            transition: --phase-primary 12s, --phase-secondary 12s, --phase-tertiary 12s;
+        }
+
+        #particle-container, #atmospheric-wisps {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes wisp-flow {
+            0% { transform: translate(-100%, -50%) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.1; }
+            80% { opacity: 0.05; }
+            100% { transform: translate(100%, 50%) rotate(10deg); opacity: 0; }
+        }
+
+        .wisp {
+            position: absolute;
+            background: radial-gradient(ellipse at center, var(--phase-primary) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            animation: wisp-flow 20s infinite linear;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: var(--phase-particle-1);
+            animation: drift linear infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(0) translateX(0); opacity: 0.7; }
+            50% { opacity: 0.2; }
+            100% { transform: translateY(-120vh) translateX(10vw); opacity: 0.7; }
+        }
+        
+        @keyframes header-shimmer {
+            0%, 100% { text-shadow: 0 0 var(--text-glow-blur) var(--phase-primary); }
+            50% { text-shadow: 0 0 calc(var(--text-glow-blur) + 4px) var(--accent-white); }
+        }
+
+        h1, h2, h3 {
+            text-shadow: 0 0 var(--text-glow-blur) var(--phase-primary);
+            transition: text-shadow 0.5s ease;
+        }
+        h1 { font-family: var(--font-header-primary); }
+        h2, h3 { font-family: var(--font-header-secondary); }
+        .shimmer-effect {
+            animation: header-shimmer 3s ease-in-out;
+        }
+
+        /* === WHEEL CONTAINER & ORNATE FRAMEWORK === */
+        #wheel-container {
+            position: relative;
+            width: 550px;
+            height: 550px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+        
+        #wheel {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            position: relative;
+            transition: transform 3.5s cubic-bezier(0.25, 1, 0.5, 1);
+            background-image:
+                conic-gradient(
+                    from 0deg,
+                    var(--seg1-cool) 0deg 72deg,
+                    var(--seg2-cool) 72deg 144deg,
+                    var(--seg3-cool) 144deg 216deg,
+                    var(--seg4-cool) 216deg 288deg,
+                    var(--seg5-cool) 288deg 360deg
+                );
+            border: 3px solid var(--phase-secondary);
+            box-shadow: 0 0 15px var(--phase-primary), inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .segment-text {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 0;
+            left: 50%;
+            transform-origin: 0 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-right: 50px; /* Push text from center */
+            font-family: var(--font-header-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--bg-deep-blue);
+            text-shadow: 0 0 3px var(--accent-white);
+            pointer-events: none;
+        }
+
+        #wheel::before, #wheel::after { /* Segment Separators */
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: 
+                repeating-conic-gradient(
+                    from 0deg, 
+                    transparent 0deg 71.5deg,
+                    var(--phase-primary) 71.5deg 72.5deg
+                );
+            border-radius: 50%;
+            filter: blur(2px);
+            opacity: 0.8;
+            transition: background 0.5s ease, filter 0.5s ease;
+        }
+
+        #ornate-ring {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            border: 2px solid transparent; /* Base for image */
+            box-shadow: 
+                inset 0 0 15px var(--phase-primary), 
+                0 0 10px var(--phase-secondary),
+                0 0 25px var(--phase-primary);
+            pointer-events: none;
+            background-image: 
+              radial-gradient(ellipse at center, transparent 79%, rgba(0,0,0,0.4) 80%),
+              repeating-conic-gradient(var(--phase-secondary) 0% 1%, var(--phase-primary) 1% 2%);
+            animation: pulse-glow 4s infinite ease-in-out, rotate-slow 120s linear infinite;
+        }
+        
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); } to { transform: rotate(360deg); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: inset 0 0 15px var(--phase-primary), 0 0 10px var(--phase-secondary), 0 0 25px var(--phase-primary); }
+            50% { box-shadow: inset 0 0 20px var(--phase-secondary), 0 0 15px var(--phase-primary), 0 0 35px var(--phase-secondary); }
+        }
+
+        .runic-inscription {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform-origin: 0 0;
+            font-size: 18px;
+            color: var(--phase-tertiary);
+            opacity: 0.7;
+        }
+
+        #central-hub {
+            width: 120px;
+            height: 120px;
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--phase-tertiary) 10%, var(--phase-primary) 60%, var(--bg-deep-blue) 90%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: var(--bg-deep-blue);
+            text-shadow: 0 0 10px var(--accent-white);
+            box-shadow: 0 0 20px var(--phase-primary), inset 0 0 15px var(--accent-white);
+            animation: pulse-glow 4s infinite ease-in-out reverse;
+        }
+
+        #wheel-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 30px solid var(--phase-primary);
+            filter: drop-shadow(0 -5px 5px var(--phase-secondary));
+            z-index: 10;
+        }
+
+        /* Floating Runic Tablets */
+        .rune-tablet {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 70px;
+            height: 45px;
+            background: rgba(45, 27, 105, 0.5); /* semi-transparent stone */
+            border: 2px solid var(--phase-secondary);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            color: var(--phase-tertiary);
+            text-shadow: 0 0 8px var(--phase-primary);
+            opacity: 0.7;
+            box-shadow: 0 0 10px var(--phase-primary);
+            transition: box-shadow 0.3s, opacity 0.3s;
+            animation: float 8s infinite ease-in-out, rotate-subtle 12s infinite linear;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        @keyframes rotate-subtle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-3deg); }
+            75% { transform: rotate(3deg); }
+        }
+
+        /* === COMPONENTS === */
+        .mystical-button {
+            width: 280px;
+            height: 80px;
+            background: rgba(45, 27, 105, 0.4);
+            border: 2px solid transparent;
+            color: var(--phase-tertiary);
+            font-family: var(--font-header-primary);
+            font-size: 24px;
+            cursor: pointer;
+            position: relative;
+            text-shadow: 0 0 var(--text-glow-blur) var(--phase-primary);
+            transition: all 0.4s ease;
+            filter: drop-shadow(0 0 var(--interactive-glow-blur) var(--phase-secondary));
+        }
+        
+        /* Ornate border effect */
+        .mystical-button::before, .mystical-button::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(135deg, var(--phase-primary), var(--phase-secondary));
+            z-index: -1;
+            transition: all 0.4s ease;
+            clip-path: polygon(
+                0% 15px, 15px 0%, calc(100% - 15px) 0%, 100% 15px,
+                100% calc(100% - 15px), calc(100% - 15px) 100%,
+                15px 100%, 0% calc(100% - 15px)
+            );
+        }
+
+        .mystical-button:hover, .mystical-button:focus {
+            filter: drop-shadow(0 0 var(--interactive-hover-glow-blur) var(--phase-primary));
+            transform: translateY(-2px);
+        }
+
+        .mystical-button:disabled {
+            cursor: not-allowed;
+            background: rgba(15, 27, 60, 0.7);
+            filter: grayscale(80%) drop-shadow(0 0 5px #333);
+            color: #666;
+            text-shadow: none;
+        }
+        .mystical-button:disabled::before, .mystical-button:disabled::after {
+            background: #555;
+        }
+        
+        #admin-access {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--phase-secondary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            color: var(--phase-tertiary);
+            cursor: pointer;
+            z-index: 100;
+            background: rgba(45, 27, 105, 0.5);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 var(--interactive-glow-blur) var(--phase-primary);
+        }
+
+        #admin-access:hover {
+            transform: rotate(45deg);
+            box-shadow: 0 0 var(--interactive-hover-glow-blur) var(--phase-primary);
+            background: rgba(60, 40, 120, 0.8);
+        }
+        
+        #countdown-timer {
+            position: absolute;
+            bottom: 20px;
+            font-family: var(--font-header-secondary);
+            font-size: 20px;
+            text-shadow: 0 0 5px var(--phase-primary);
+            padding: 10px 20px;
+            background: rgba(15, 27, 60, 0.5);
+            border: 1px solid var(--phase-secondary);
+            border-radius: 10px;
+        }
+
+        /* === MODALS === */
+        .modal {
+            display: none; /* Controlled by JS */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            animation: modal-summon 0.5s forwards;
+        }
+        @keyframes modal-summon {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-content {
+            background: linear-gradient(160deg, var(--bg-soft-purple), var(--bg-deep-blue));
+            padding: 30px;
+            position: relative;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            min-width: 400px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: pulse-glow 8s infinite ease-in-out;
+        }
+        
+        .modal-content::before { /* Ornate Frame */
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: 15px;
+            padding: 5px;
+            background: linear-gradient(145deg, var(--phase-primary), var(--phase-secondary));
+            -webkit-mask: 
+               linear-gradient(#fff 0 0) content-box, 
+               linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+        }
+        
+        .modal-header {
+            font-family: var(--font-header-primary);
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--phase-tertiary);
+            transition: color 0.3s, transform 0.3s;
+        }
+        .modal-close:hover {
+            color: var(--accent-white);
+            transform: scale(1.2);
+        }
+
+        /* Passcode Modal */
+        .passcode-input-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        .mystical-input, .mystical-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(15, 27, 60, 0.7);
+            border: 1px solid var(--phase-secondary);
+            border-radius: 5px;
+            color: var(--phase-tertiary);
+            font-family: var(--font-body);
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .mystical-input:focus, .mystical-textarea:focus {
+            outline: none;
+            border-color: var(--phase-primary);
+            box-shadow: 0 0 10px var(--phase-primary);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* Result Modal */
+        #result-content {
+            text-align: center;
+        }
+        #result-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 2px solid var(--phase-secondary);
+            box-shadow: 0 0 10px var(--phase-primary);
+        }
+        #result-text {
+            font-size: 18px;
+            margin: 20px 0;
+            line-height: 1.6;
+            min-height: 50px;
+        }
+
+        /* Admin Panel */
+        .admin-section {
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(140, 204, 255, 0.2);
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .admin-section::before { /* Section frames */
+             content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 10px;
+            padding: 2px;
+            background: linear-gradient(145deg, rgba(140, 204, 255, 0.3), rgba(204, 204, 255, 0.3));
+            -webkit-mask: 
+               linear-gradient(#fff 0 0) content-box, 
+               linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .admin-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--phase-secondary);
+            padding-bottom: 10px;
+        }
+        
+        .tip-management {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .tip-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-family: var(--font-header-secondary);
+            font-weight: bold;
+        }
+        
+        .mystical-textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .file-input-group {
+            margin-top: 10px;
+        }
+        
+        #music-lock {
+            display: flex; /* Changed to flex */
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px;
+            border: 2px dashed var(--phase-secondary);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #music-lock:hover {
+            background: rgba(140, 204, 255, 0.1);
+            border-color: var(--phase-primary);
+        }
+        #music-lock.unlocked {
+            display: none;
+        }
+        #music-controls {
+            display: none; /* Initially hidden */
+        }
+        #music-controls.unlocked {
+            display: block;
+        }
+        .lock-icon {
+            font-size: 24px;
+        }
+
+        #error-message {
+            color: #FFB6C1;
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff0000;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="particle-container"></div>
+    <div id="atmospheric-wisps"></div>
+    
+    <div id="wheel-container">
+        <div id="ornate-ring"></div>
+        <div id="wheel"></div>
+        <div id="central-hub">✧</div>
+        <div id="wheel-pointer"></div>
+    </div>
+
+    <button id="spin-button" class="mystical-button">LET'S GO!!!</button>
+    <div id="countdown-timer" style="display: none;"></div>
+
+    <div id="admin-access" title="Admin Settings">⚙</div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal">
+        <div class="modal-content" id="result-content">
+            <span class="modal-close">×</span>
+            <h2 class="modal-header">The Oracle Reveals...</h2>
+            <img id="result-image" src="" alt="Prompt Image" style="display: none;">
+            <p id="result-text"></p>
+            <button id="close-result-button" class="mystical-button" style="width: 200px; height: 60px; font-size: 18px;">Heed the Wisdom</button>
+        </div>
+    </div>
+
+    <!-- Admin Passcode Modal -->
+    <div id="admin-passcode-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">×</span>
+            <h2 class="modal-header">Enter the Master Rune</h2>
+            <div class="passcode-input-container">
+                <input type="password" id="admin-passcode" class="mystical-input" placeholder="Speak the word...">
+                <span class="password-toggle">👁</span>
+            </div>
+            <button id="submit-admin-passcode" class="mystical-button" style="width: 100%;">Unlock Sanctum</button>
+            <p id="admin-error-message" class="error-message"></p>
+        </div>
+    </div>
+
+    <!-- Music Passcode Modal -->
+    <div id="music-passcode-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">×</span>
+            <h2 class="modal-header">Rune of Harmony</h2>
+            <div class="passcode-input-container">
+                <input type="password" id="music-passcode" class="mystical-input" placeholder="The secret song...">
+                <span class="password-toggle">👁</span>
+            </div>
+            <button id="submit-music-passcode" class="mystical-button" style="width: 100%;">Attune</button>
+            <p id="music-error-message" class="error-message"></p>
+        </div>
+    </div>
+    
+    <!-- Admin Panel Modal -->
+    <div id="admin-panel-modal" class="modal">
+        <div class="modal-content" style="width: 800px;">
+            <span class="modal-close">×</span>
+            <h2 class="modal-header">Sanctum of Creation</h2>
+            
+            <!-- Tip Management Section -->
+            <div class="admin-section">
+                <h3>※ Arcane Prompts ※</h3>
+                <div class="tip-management">
+                    <div class="tip-group" data-segment="0"><label>Segment 1 (Cool Cyan)</label><textarea class="mystical-textarea"></textarea></div>
+                    <div class="tip-group" data-segment="1"><label>Segment 2 (Ethereal Green)</label><textarea class="mystical-textarea"></textarea></div>
+                    <div class="tip-group" data-segment="2"><label>Segment 3 (Soft Pink)</label><textarea class="mystical-textarea"></textarea></div>
+                    <div class="tip-group" data-segment="3"><label>Segment 4 (Pale Gold)</label><textarea class="mystical-textarea"></textarea></div>
+                    <div class="tip-group" data-segment="4"><label>Segment 5 (Mystical Purple)</label><textarea class="mystical-textarea"></textarea></div>
+                </div>
+                <button id="save-tips" class="mystical-button" style="width: 100%; margin-top: 20px;">Commit Glyphs</button>
+            </div>
+
+            <!-- Visuals and Audio Section -->
+            <div class="admin-section">
+                <h3>◊ Aether & Echoes ◊</h3>
+                <!-- Music Controls -->
+                <div id="music-lock">
+                    <span class="lock-icon">🔒</span><span>Unlock Music Controls</span>
+                </div>
+                <div id="music-controls">
+                    <h4>Echoes (Audio)</h4>
+                    <p>Provide a URL or upload an MP3/WAV/OGG file (Max 10MB).</p>
+                    <input type="text" id="audio-url" class="mystical-input" placeholder="Audio URL...">
+                    <div class="file-input-group">
+                        <label>Or Upload File: </label><input type="file" id="audio-file" accept="audio/mpeg,audio/wav,audio/ogg">
+                    </div>
+                    <button id="save-audio" class="mystical-button" style="width: 100%; margin-top: 10px;">Attune Echoes</button>
+                    <button id="play-pause-music" class="mystical-button" style="width: 100%; margin-top: 10px;">Play/Pause Music</button>
+                </div>
+                <hr style="border-color: var(--phase-secondary); margin: 20px 0; opacity: 0.3;">
+                <!-- Image Controls -->
+                <div>
+                    <h4>Aether (Background Image)</h4>
+                    <p>Provide a URL or upload a JPG/PNG/GIF file (Max 5MB).</p>
+                    <input type="text" id="image-url" class="mystical-input" placeholder="Image URL...">
+                    <div class="file-input-group">
+                        <label>Or Upload File: </label><input type="file" id="image-file" accept="image/jpeg,image/png,image/gif">
+                    </div>
+                    <button id="save-image" class="mystical-button" style="width: 100%; margin-top: 10px;">Conjure Aether</button>
+                </div>
+                 <p id="admin-panel-error" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+    
+    <audio id="background-audio" loop></audio>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // === DOM ELEMENTS ===
+        const wheel = document.getElementById('wheel');
+        const spinButton = document.getElementById('spin-button');
+        const countdownTimer = document.getElementById('countdown-timer');
+        const particleContainer = document.getElementById('particle-container');
+        const wheelContainer = document.getElementById('wheel-container');
+        const body = document.body;
+
+        // Modals
+        const resultModal = document.getElementById('result-modal');
+        const adminPasscodeModal = document.getElementById('admin-passcode-modal');
+        const musicPasscodeModal = document.getElementById('music-passcode-modal');
+        const adminPanelModal = document.getElementById('admin-panel-modal');
+        const modals = document.querySelectorAll('.modal');
+        
+        // Result Modal Elements
+        const resultImage = document.getElementById('result-image');
+        const resultText = document.getElementById('result-text');
+        const closeResultButton = document.getElementById('close-result-button');
+
+        // Admin Access
+        const adminAccessButton = document.getElementById('admin-access');
+        const adminPasscodeSubmit = document.getElementById('submit-admin-passcode');
+        const adminPasscode = document.getElementById('admin-passcode');
+
+        // Music Access
+        const musicLock = document.getElementById('music-lock');
+        const musicPasscodeSubmit = document.getElementById('submit-music-passcode');
+        const musicPasscode = document.getElementById('music-passcode');
+        
+        // Admin Panel
+        const saveTipsButton = document.getElementById('save-tips');
+        const saveAudioButton = document.getElementById('save-audio');
+        const saveImageButton = document.getElementById('save-image');
+        const musicControls = document.getElementById('music-controls');
+        const playPauseButton = document.getElementById('play-pause-music');
+        const backgroundAudio = document.getElementById('background-audio');
+
+        // === STATE & CONFIGURATION ===
+        let isSpinning = false;
+        const SEGMENT_COUNT = 5;
+        const SEGMENT_ANGLE = 360 / SEGMENT_COUNT;
+        const DAILY_SPIN_COOLDOWN = 24 * 60 * 60 * 1000; // 24 hours in ms
+        let tips = {};
+        const RUNE_SYMBOLS = ['ᚠ', 'ᚢ', 'ᚦ', 'ᚨ', 'ᚱ', 'ᚲ', 'ᚷ', 'ᚹ'];
+        const ORNATE_RING_RUNES = ['※', '◊', '✧', '◈', 'ᚱ', 'ᚢ', 'ᚾ', 'ᛋ', 'ᛏ', 'ᛁ', 'ᛒ', 'ᛗ', 'ᛚ', 'ᛝ', 'ᛟ', 'ᛞ'];
+        let countdownInterval;
+
+        // === INITIALIZATION ===
+        function init() {
+            loadDataFromStorage();
+            createAtmosphere();
+            createFloatingRunes();
+            createWheelSegments();
+            createOrnateRingInscriptions();
+            checkSpinStatus();
+            setupEventListeners();
+            tryAutoplayAudio();
+            setInterval(() => document.querySelectorAll('h1, h2, h3').forEach(h => h.classList.toggle('shimmer-effect')), 12000);
+        }
+
+        // === DATA MANAGEMENT (LocalStorage) ===
+        function loadDataFromStorage() {
+            const storedTips = localStorage.getItem('mysticalWheelTips');
+            tips = storedTips ? JSON.parse(storedTips) : {
+                0: ["Create a character who harvests dreams from glowing moon-petal flowers.", "Illustrate a library where books fly and whisper ancient secrets.", "Design a potion that grants the ability to speak with ancient trees."],
+                1: ["Describe a swamp sprite that guides lost travelers with a bioluminescent lantern.", "Invent a magical creature that is born from a thunderstorm.", "Draw a map of a hidden grove where time flows differently."],
+                2: ["Write a love story between a fire spirit and a river nymph.", "Design a ceremonial armor made of woven starlight and rose thorns.", "Create a spell that can mend a broken heart, but has a surprising side effect."],
+                3: ["Imagine a marketplace that only appears under a double rainbow, selling impossible goods.", "Depict a golem crafted from enchanted gingerbread and candy gems.", "Write a lullaby sung by desert sirens to calm sandstorms."],
+                4: ["Describe a ritual to summon a familiar from a constellation.", "Design a wizard's tower that is also a giant, living hourglass.", "Create a magical artifact that stores memories in crystalline shards."]
+            };
+
+            // Load settings
+            const bgImage = localStorage.getItem('mysticalBgImage');
+            if (bgImage) body.style.backgroundImage = `url(${bgImage}), linear-gradient(160deg, var(--bg-soft-purple), var(--bg-deep-blue))`;
+
+            const audioSrc = localStorage.getItem('mysticalAudio');
+            if (audioSrc) backgroundAudio.src = audioSrc;
+
+            updateAdminPanelInputs();
+        }
+
+        function saveDataToStorage() {
+            localStorage.setItem('mysticalWheelTips', JSON.stringify(tips));
+            alertWithMagic("Glyphs have been committed to the archives! ✨");
+        }
+        
+        function updateAdminPanelInputs() {
+            for (let i = 0; i < SEGMENT_COUNT; i++) {
+                const textarea = document.querySelector(`.tip-group[data-segment="${i}"] textarea`);
+                textarea.value = tips[i].join('\n');
+            }
+            document.getElementById('image-url').value = localStorage.getItem('mysticalBgImageURL') || '';
+            document.getElementById('audio-url').value = localStorage.getItem('mysticalAudioURL') || '';
+        }
+
+        // === ATMOSPHERIC & MAGICAL EFFECTS ===
+        function createAtmosphere() {
+            // Background Particles
+            for (let i = 0; i < 15; i++) {
+                createParticle(true);
+            }
+            // Atmospheric Wisps
+            const wispContainer = document.getElementById('atmospheric-wisps');
+            for (let i = 0; i < 8; i++) {
+                const wisp = document.createElement('div');
+                wisp.className = 'wisp';
+                wisp.style.left = `${Math.random() * 100}%`;
+                wisp.style.top = `${Math.random() * 100}%`;
+                wisp.style.width = `${Math.random() * 300 + 200}px`;
+                wisp.style.height = `${Math.random() * 150 + 100}px`;
+                wisp.style.animationDelay = `${Math.random() * 20}s`;
+                wisp.style.animationDuration = `${Math.random() * 10 + 15}s`;
+                wispContainer.appendChild(wisp);
+            }
+        }
+        
+        function createParticle(isAmbient = false, x, y) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = isAmbient ? Math.random() * 6 + 4 : Math.random() * 10 + 8;
+            p.style.width = `${size}px`;
+            p.style.height = `${size}px`;
+            
+            if(x && y) { // Burst particle
+                p.style.left = `${x}px`;
+                p.style.top = `${y}px`;
+                const angle = Math.random() * 2 * Math.PI;
+                const radius = Math.random() * 150 + 50;
+                p.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${Math.cos(angle) * radius}px, ${Math.sin(angle) * radius}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 1500 + 1000,
+                    easing: 'cubic-bezier(0.1, 0.7, 1.0, 0.1)'
+                });
+            } else { // Ambient particle
+                p.style.left = `${Math.random() * 100}vw`;
+                p.style.top = `${Math.random() * 100}vh`;
+                p.style.animationDuration = `${Math.random() * 20 + 15}s`;
+                p.style.animationDelay = `${Math.random() * 15}s`;
+                p.style.backgroundColor = Math.random() > 0.5 ? 'var(--phase-particle-1)' : 'var(--phase-particle-2)';
+            }
+            
+            particleContainer.appendChild(p);
+            setTimeout(() => p.remove(), 2500); // Clean up burst particles
+        }
+
+        function magicalBurst(count = 35, x, y) {
+             const rect = wheelContainer.getBoundingClientRect();
+             const originX = x || rect.left + rect.width / 2;
+             const originY = y || rect.top + rect.height / 2;
+            for (let i = 0; i < count; i++) {
+                createParticle(false, originX, originY);
+            }
+        }
+
+        function createFloatingRunes() {
+            const radius = 275; // 550px diameter
+            for (let i = 0; i < 8; i++) {
+                const tablet = document.createElement('div');
+                tablet.className = 'rune-tablet';
+                tablet.textContent = RUNE_SYMBOLS[i];
+                const angle = (i / 8) * 2 * Math.PI;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                tablet.style.transform = `translate(${x}px, ${y}px)`;
+                tablet.style.animationDelay = `${Math.random() * 5}s`;
+                tablet.style.animationDuration = `${Math.random() * 6 + 9}s`; // Stagger float
+                wheelContainer.appendChild(tablet);
+            }
+        }
+        
+        function createOrnateRingInscriptions() {
+             const ring = document.getElementById('ornate-ring');
+             const radius = 240;
+             for (let i = 0; i < ORNATE_RING_RUNES.length; i++) {
+                const rune = document.createElement('span');
+                rune.className = 'runic-inscription';
+                rune.textContent = ORNATE_RING_RUNES[i];
+                const angle = i * (360 / ORNATE_RING_RUNES.length);
+                const x = radius * Math.cos(angle * Math.PI / 180);
+                const y = radius * Math.sin(angle * Math.PI / 180);
+                rune.style.transform = `translate(${x}px, ${y}px) rotate(${angle + 90}deg)`;
+                ring.appendChild(rune);
+             }
+        }
+
+        function createWheelSegments() {
+            const segmentLabels = ["Mystic Arts", "Creature Forge", "Love & Legends", "World Weaving", "Cosmic Craft"];
+            for (let i = 0; i < SEGMENT_COUNT; i++) {
+                const textDiv = document.createElement('div');
+                textDiv.className = 'segment-text';
+                textDiv.textContent = segmentLabels[i];
+                const rotation = i * SEGMENT_ANGLE + SEGMENT_ANGLE / 2;
+                textDiv.style.transform = `rotate(${rotation}deg)`;
+                wheel.appendChild(textDiv);
+            }
+        }
+
+        // === CORE FUNCTIONALITY ===
+        function checkSpinStatus() {
+            const lastSpinTime = localStorage.getItem('lastMysticalSpin');
+            if (!lastSpinTime) {
+                spinButton.disabled = false;
+                countdownTimer.style.display = 'none';
+                return;
+            }
+
+            const timePassed = Date.now() - parseInt(lastSpinTime);
+            if (timePassed >= DAILY_SPIN_COOLDOWN) {
+                spinButton.disabled = false;
+                countdownTimer.style.display = 'none';
+            } else {
+                spinButton.disabled = true;
+                const timeLeft = DAILY_SPIN_COOLDOWN - timePassed;
+                startCountdown(timeLeft);
+            }
+        }
+
+        function startCountdown(duration) {
+            clearInterval(countdownInterval);
+            countdownTimer.style.display = 'block';
+            let timer = duration;
+
+            countdownInterval = setInterval(() => {
+                const hours = Math.floor((timer / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((timer / 1000 / 60) % 60);
+                const seconds = Math.floor((timer / 1000) % 60);
+
+                countdownTimer.textContent = `Next Ritual in: ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+                
+                timer -= 1000;
+                if (timer < 0) {
+                    clearInterval(countdownInterval);
+                    checkSpinStatus();
+                }
+            }, 1000);
+        }
+
+        function handleSpin() {
+            if (isSpinning) return;
+            isSpinning = true;
+            spinButton.disabled = true;
+
+            const randomSpins = Math.floor(Math.random() * 5) + 5; // 5 to 9 full spins
+            const randomStopAngle = Math.random() * 360;
+            const finalRotation = (randomSpins * 360) + randomStopAngle;
+            
+            wheel.style.transition = 'transform 3.5s cubic-bezier(0.25, 1, 0.5, 1)';
+            wheel.style.transform = `rotate(${finalRotation}deg)`;
+
+            // Trigger spin animations
+            document.querySelectorAll('.rune-tablet').forEach(r => r.style.animation = 'float 1s infinite ease-in-out, pulse-glow 0.5s infinite alternate');
+            
+            wheel.addEventListener('transitionend', onSpinEnd, { once: true });
+        }
+        
+        function onSpinEnd() {
+            isSpinning = false;
+            const currentRotation = parseFloat(wheel.style.transform.replace('rotate(', '').replace('deg)', '')) % 360;
+            const winningSegmentIndex = Math.floor((360 - currentRotation + (SEGMENT_ANGLE / 2)) % 360 / SEGMENT_ANGLE);
+
+            const tipPool = tips[winningSegmentIndex] || ["The ether is silent... (No prompt for this segment)"];
+            const randomTip = tipPool[Math.floor(Math.random() * tipPool.length)];
+            
+            showResult(randomTip);
+
+            localStorage.setItem('lastMysticalSpin', Date.now());
+            checkSpinStatus();
+
+            // Reset animations
+            document.querySelectorAll('.rune-tablet').forEach(r => r.style.animation = '');
+        }
+
+        function showResult(tip) {
+            resultText.textContent = tip;
+            resultImage.style.display = 'none'; // Can be used later if tips have associated images
+            
+            showModal(resultModal);
+            setTimeout(() => magicalBurst(), 100);
+            
+            // Runic celebration
+            const tablets = document.querySelectorAll('.rune-tablet');
+            tablets.forEach((tablet, index) => {
+                setTimeout(() => {
+                    tablet.style.transition = 'all 0.2s';
+                    tablet.style.boxShadow = '0 0 30px var(--accent-white)';
+                    tablet.style.transform += ' scale(1.1)';
+                    setTimeout(() => {
+                        tablet.style.boxShadow = '';
+                        tablet.style.transform = tablet.style.transform.replace(' scale(1.1)','');
+                    }, 300);
+                }, index * 100);
+            });
+        }
+        
+        // === AUDIO HANDLING ===
+        function tryAutoplayAudio() {
+            if(backgroundAudio.src) {
+                backgroundAudio.play().catch(e => {
+                    console.log("Autoplay blocked. User interaction required.");
+                    playPauseButton.textContent = "Play Music";
+                });
+                playPauseButton.textContent = "Pause Music";
+            }
+        }
+        
+        function togglePlayPause() {
+            if(!backgroundAudio.src) {
+                alertWithMagic("No echo has been attuned yet.");
+                return;
+            }
+            if (backgroundAudio.paused) {
+                backgroundAudio.play();
+                playPauseButton.textContent = "Pause Music";
+            } else {
+                backgroundAudio.pause();
+                playPauseButton.textContent = "Play Music";
+            }
+        }
+
+        // === MODAL & UI HELPERS ===
+        function showModal(modal) {
+            modal.style.display = 'flex';
+            setTimeout(() => magicalBurst(15, window.innerWidth / 2, window.innerHeight / 2), 50);
+        }
+
+        function hideModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        function alertWithMagic(message, isError = false) {
+            const errorP = document.getElementById('admin-panel-error');
+            errorP.textContent = message;
+            errorP.style.color = isError ? '#FFB6C1' : 'var(--phase-tertiary)';
+            errorP.style.textShadow = isError ? '0 0 5px #ff0000' : '0 0 5px var(--phase-primary)';
+            magicalBurst(isError ? 20 : 10);
+            setTimeout(() => errorP.textContent = '', 4000);
+        }
+        
+        function handleFileUpload(file, maxSizeMB, type, callback) {
+            if (file) {
+                if (file.size > maxSizeMB * 1024 * 1024) {
+                    alertWithMagic(`${type} is too large! Maximum ${maxSizeMB}MB.`, true);
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => callback(e.target.result);
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // === EVENT LISTENERS ===
+        function setupEventListeners() {
+            spinButton.addEventListener('click', handleSpin);
+            
+            // Modal closing logic
+            modals.forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) hideModal(modal);
+                });
+                const closeButton = modal.querySelector('.modal-close');
+                if (closeButton) closeButton.addEventListener('click', () => hideModal(modal));
+            });
+            closeResultButton.addEventListener('click', () => hideModal(resultModal));
+
+            // Password toggles
+            document.querySelectorAll('.password-toggle').forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const input = toggle.previousElementSibling;
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                });
+            });
+
+            // Admin flow
+            adminAccessButton.addEventListener('click', () => showModal(adminPasscodeModal));
+            adminPasscodeSubmit.addEventListener('click', () => {
+                if (adminPasscode.value === "BerniBOT") {
+                    hideModal(adminPasscodeModal);
+                    showModal(adminPanelModal);
+                    adminPasscode.value = '';
+                    document.getElementById('admin-error-message').textContent = '';
+                } else {
+                    document.getElementById('admin-error-message').textContent = 'Incorrect Rune.';
+                    adminPasscode.parentElement.animate([
+                        { transform: 'translateX(0)' }, { transform: 'translateX(-10px)' },
+                        { transform: 'translateX(10px)' }, { transform: 'translateX(0)' },
+                    ], { duration: 300 });
+                }
+            });
+            
+            // Music unlock flow
+            musicLock.addEventListener('click', () => showModal(musicPasscodeModal));
+            submit-music-passcode.addEventListener('click', () => {
+                if(musicPasscode.value === "BerniBOTYousic") {
+                     hideModal(musicPasscodeModal);
+                     musicLock.classList.add('unlocked');
+                     musicControls.classList.add('unlocked');
+                     musicPasscode.value = '';
+                     document.getElementById('music-error-message').textContent = '';
+                } else {
+                    document.getElementById('music-error-message').textContent = 'Discordant Rune.';
+                    musicPasscode.parentElement.animate([
+                        { transform: 'translateX(0)' }, { transform: 'translateX(-10px)' },
+                        { transform: 'translateX(10px)' }, { transform: 'translateX(0)' },
+                    ], { duration: 300 });
+                }
+            });
+            
+            // Admin Panel buttons
+            saveTipsButton.addEventListener('click', () => {
+                document.querySelectorAll('.tip-group').forEach(group => {
+                    const segment = group.dataset.segment;
+                    const textarea = group.querySelector('textarea');
+                    tips[segment] = textarea.value.split('\n').map(t => t.trim()).filter(t => t);
+                });
+                saveDataToStorage();
+            });
+            
+            saveAudioButton.addEventListener('click', () => {
+                const url = document.getElementById('audio-url').value;
+                const file = document.getElementById('audio-file').files[0];
+                if(file) {
+                    handleFileUpload(file, 10, 'Audio', (dataUrl) => {
+                        backgroundAudio.src = dataUrl;
+                        localStorage.setItem('mysticalAudio', dataUrl);
+                        localStorage.removeItem('mysticalAudioURL');
+                        tryAutoplayAudio();
+                        alertWithMagic("Echo has been attuned!");
+                    });
+                } else if(url) {
+                    backgroundAudio.src = url;
+                    localStorage.setItem('mysticalAudio', url);
+                    localStorage.setItem('mysticalAudioURL', url);
+                    tryAutoplayAudio();
+                    alertWithMagic("Echo has been attuned!");
+                }
+            });
+            
+            saveImageButton.addEventListener('click', () => {
+                const url = document.getElementById('image-url').value;
+                const file = document.getElementById('image-file').files[0];
+                if(file) {
+                    handleFileUpload(file, 5, 'Image', (dataUrl) => {
+                        body.style.backgroundImage = `url(${dataUrl}), linear-gradient(160deg, var(--bg-soft-purple), var(--bg-deep-blue))`;
+                        localStorage.setItem('mysticalBgImage', dataUrl);
+                        localStorage.removeItem('mysticalBgImageURL');
+                        alertWithMagic("Aether has been conjured!");
+                    });
+                } else if(url) {
+                    body.style.backgroundImage = `url(${url}), linear-gradient(160deg, var(--bg-soft-purple), var(--bg-deep-blue))`;
+                    localStorage.setItem('mysticalBgImage', url);
+                    localStorage.setItem('mysticalBgImageURL', url);
+                    alertWithMagic("Aether has been conjured!");
+                }
+            });
+            
+            playPauseButton.addEventListener('click', togglePlayPause);
+        }
+        
+        // START THE MAGIC
+        init();
+    });
+    </script>
+</body>
+</html>
